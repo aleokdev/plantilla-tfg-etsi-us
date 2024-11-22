@@ -1,3 +1,5 @@
+#import "cover.typ": cover
+
 #let etsi_color = rgb(83, 16, 12)
 
 #let cover(
@@ -48,7 +50,6 @@
   })
 }
 
-#cover("Ingeniería Robótica, Electrónica y Mecatrónica",
-"Nombre Apellidos",
-"Nombre Apellidos",
-"Departamento")
+#let tfg_etsi_us_template(body) = {
+  cover()
+}
