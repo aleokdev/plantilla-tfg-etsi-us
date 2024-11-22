@@ -1,19 +1,5 @@
 #let etsi_color = rgb(83, 16, 12)
 
-#let thesis_metadata(
-  // El título del TFG
-  title,
-  // El grado de la titulación, e.g. Ingeniería Industrial
-  degree,
-  // Nombre y apellidos del autor
-  author,
-  // Nombre y apellidos del tutor (o tutores)
-  tutor,
-  // Nombre del departamento asociado
-  department,
-  // Año del TFG (Por defecto el año de compilación del archivo)
-  year: datetime.today().year()
-) = (title: title, degree: degree, author: author, tutor: tutor, department: department, year: year)
 
 #let cover(
   metadata
@@ -31,23 +17,24 @@
       place(top + left, dx: 141mm, dy: 265mm, [/* department logo */])
 
       set par(leading: 0.4em)
-      place(top + left, dx: 42mm, dy: 25mm, text(size: 21pt, [
+      place(top + left, dx: 42mm, dy: 25mm, box(width: 155mm, text(size: 21pt, [
         Trabajo Fin de Grado\
         en #metadata.degree
-      ]))
+      ])))
       place(bottom + left, dx: 4.2cm, dy: -16.6cm, text(size: 21pt, box(width: 16cm, [#metadata.title])))
 
-      place(top + left, dx: 4.2cm, dy: 165mm, text(size: 15pt, [
-        Autor: #metadata.author\
+      place(top + left, dx: 4.2cm, dy: 165mm, text(size: 14pt, [
+        Autor: #metadata.author
+
         Tutor: #metadata.tutor
       ]) )
 
-      place(top + center, dy: 215mm, box(width: 13cm, text(size: 14pt, fill: white, weight: "bold", [
+      place(top + center, dy: 217mm, box(width: 13cm, text(size: 14pt, fill: white, weight: "bold", [
         #metadata.department\
         Escuela Técnica Superior de Ingeniería\
         Universidad de Sevilla
         #v(0.5cm)
-        #text(size: 13pt, weight: "regular", [Sevilla, #metadata.year])
+        #text(size: 10pt, weight: "regular", [Sevilla, #metadata.year])
         ])))
 
       place(top + center, dy: 267mm, image(width: 2.5cm, "figures/US-marca-principal.png"))
@@ -58,27 +45,60 @@
 #let title_page(
   metadata
 ) = {
+  set align(center)
+  set par(spacing: 0pt, leading: 0.5em)
+  text(size: 16pt, [
+    Trabajo Fin de Grado\
+    en #metadata.degree
+  ])
+  v(2cm)
+  text(size: 21pt, weight: "bold", metadata.title)
+  v(2cm)
+  text(size: 10pt, [Autor:])
+  v(0.4cm)
+  text(size: 14pt, metadata.author)
+  v(1.5cm)
+  text(size: 10pt, [Tutor:])
+  v(0.4cm)
+  text(size: 14pt, metadata.author)
+  v(0.4cm)
+  text(size: 10pt, metadata.tutor_title)
+  v(3.5cm)
+  text(size: 14pt, [
+    #metadata.department\
+    Escuela Técnica Superior de Ingeniería\
+    Universidad de Sevilla
+  ])
+  v(0.5cm)
+  text(size: 10pt, [Sevilla, #metadata.year])
+
 
 }
 
 #let tfg_etsi_us_template(
   // El título del TFG
   title,
-  // El grado de la titulación, e.g. Ingeniería Industrial
+  // El grado de la titulación, p.ej. Ingeniería Industrial
   degree,
   // Nombre y apellidos del autor
   author,
   // Nombre y apellidos del tutor (o tutores)
   tutor,
+  // Título del tutor, p.ej. Profesor Asociado
+  tutor_title,
   // Nombre del departamento asociado
   department,
   // Año del TFG (Por defecto el año de compilación del archivo)
   year: datetime.today().year(),
 
   body) = {
-  let metadata = thesis_metadata(title, degree, author, tutor, department, year: year)
+  let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year)
 
   cover(metadata)
   pagebreak()
+  pagebreak()
   title_page(metadata)
+  pagebreak()
+  pagebreak()
+  body
 }
