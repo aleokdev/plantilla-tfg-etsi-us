@@ -5,7 +5,6 @@
   metadata
 ) = {
   set page(
-    margin: 0pt,
     paper: "a4",
     background: {
       place(top + left, rect(fill: etsi_color, width: 35mm, height: 100%))
@@ -71,8 +70,17 @@
   ])
   v(0.5cm)
   text(size: 10pt, [Sevilla, #metadata.year])
+}
 
+#let main_heading(x) = {
+  pagebreak(weak: true)
 
+  set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
+  set block(spacing: 0pt)
+  v(75pt)
+  align(end, x)
+  v(13pt)
+  line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
 }
 
 #let tfg_etsi_us_template(
@@ -92,6 +100,14 @@
   year: datetime.today().year(),
 
   body) = {
+  set page(
+    margin: (
+      top: 1in - 23pt + 12pt + 25pt,
+      inside: 1in + 13pt,
+      // TODO Grab rest from https://www.overleaf.com/learn/latex/Page_size_and_margins
+    )
+  )
+
   let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year)
 
   cover(metadata)
@@ -100,5 +116,7 @@
   title_page(metadata)
   pagebreak()
   pagebreak()
+
+  show heading.where(level: 1): main_heading
   body
 }
