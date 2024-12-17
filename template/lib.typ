@@ -59,7 +59,7 @@
   v(1.5cm)
   text(size: 10pt, [Tutor:])
   v(0.4cm)
-  text(size: 14pt, metadata.author)
+  text(size: 14pt, metadata.tutor)
   v(0.4cm)
   text(size: 10pt, metadata.tutor_title)
   v(3.5cm)
@@ -81,6 +81,7 @@
   align(end, x)
   v(13pt)
   line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
+  v(15pt)
 }
 
 #let tfg_etsi_us_template(
@@ -100,6 +101,9 @@
   year: datetime.today().year(),
 
   body) = {
+  set text(lang: "es")
+  set par(justify: true)
+
   set page(
     margin: (
       top: 1in - 23pt + 12pt + 25pt,
