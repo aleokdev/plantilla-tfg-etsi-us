@@ -11,6 +11,11 @@
       place(top + left, dy: 205mm, rect(fill: etsi_color, height: 261mm-205mm, width: 100%))
     },
     foreground: {
+      if metadata.dev_mode {
+        let today = datetime.today()
+        set text(size: 6mm)
+        place(top + right, dx: -5mm, dy: 5mm, box(fill: white, outset: 2mm, raw("VERSIÓN DEL " + str(today.day()) + "/" + str(today.month()) + "/" + str(today.year()))))
+      }
       place(top + left, dx:0mm, dy: 205mm, image("figures/edificio01.png", width: 35mm, height: 5.6cm))
       place(top + left, dx: 175mm, dy: 215mm, image("figures/Logo.svg", width: 2.5cm))
       place(top + left, dx: 141mm, dy: 265mm, [/* department logo */])
@@ -78,7 +83,7 @@
   set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
   set block(spacing: 0pt)
   v(75pt)
-  align(end, x)
+  align(end, x.body)
   v(13pt)
   line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
   v(15pt)
@@ -109,10 +114,11 @@
       top: 1in - 23pt + 12pt + 25pt,
       inside: 1in + 13pt,
       // TODO Grab rest from https://www.overleaf.com/learn/latex/Page_size_and_margins
-    )
+    ),
+    numbering: "1" // TODO same numbering as sample tfg document
   )
 
-  let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year)
+  let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year, dev_mode: true)
 
   cover(metadata)
   pagebreak()
@@ -122,5 +128,16 @@
   pagebreak()
 
   show heading.where(level: 1): main_heading
+  show outline: x => {
+    let chapters = query(x.target)
+    for chapter in chapters {
+      let loc = chapter.location()
+      let nr = numbering(
+        loc.page-numbering(),
+        ..counter(page).at(loc),
+      )
+      [#chapter.body #h(1fr) #nr \ ]
+    }
+  }
   body
 }
