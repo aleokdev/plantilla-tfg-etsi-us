@@ -136,7 +136,7 @@
         loc.page-numbering(),
         ..counter(page).at(loc),
       )
-      [#chapter.body #h(1fr) #nr \ ]
+      [#h(1em * chapter.level) #chapter.body #h(1fr) #nr \ ]
     }
   }
   body
