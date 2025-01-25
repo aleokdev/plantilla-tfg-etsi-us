@@ -89,6 +89,44 @@
   v(15pt)
 }
 
+#let index() = context {
+    [= Índice]
+    set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
+    let chapters = query(heading)
+    for chapter in chapters {
+      let loc = chapter.location()
+
+      let body = if chapter.numbering == none {
+        emph(chapter.body)
+      } else {
+        chapter.body
+      }
+
+      let page_number = numbering(
+        loc.page-numbering(),
+        ..counter(page).at(loc),
+      )
+
+      let level_numbering = if chapter.numbering == none {
+          none
+        } else {
+          context numbering(chapter.numbering, ..counter(heading).at(loc))
+        }
+
+      let entry = [#grid(columns: (20pt * (chapter.level - 1), 20pt, 1fr, auto), [], level_numbering, body, page_number)]
+
+      let entry_spacing = if chapter.numbering != none and chapter.level == 1 { 10pt } else { 5pt }
+
+      show grid: set block(above: entry_spacing, below: entry_spacing)
+
+      if chapter.level == 1 and chapter.numbering != none {
+        strong(entry)
+      } else {
+        entry
+      }
+    }
+}
+
 #let tfg_etsi_us_template(
   // El título del TFG
   title,
@@ -128,16 +166,9 @@
   pagebreak()
 
   show heading.where(level: 1): main_heading
-  show outline: x => {
-    let chapters = query(x.target)
-    for chapter in chapters {
-      let loc = chapter.location()
-      let nr = numbering(
-        loc.page-numbering(),
-        ..counter(page).at(loc),
-      )
-      [#h(1em * chapter.level) #chapter.body #h(1fr) #nr \ ]
-    }
-  }
+  index()
+
   body
 }
+
+#let content_heading_numbering(..nums) = nums.pos().map(str).join(".")
