@@ -23,7 +23,7 @@
       set par(leading: 0.4em)
       place(top + left, dx: 42mm, dy: 25mm, box(width: 155mm, text(size: 21pt, [
         Trabajo Fin de Grado\
-        en #metadata.degree
+        #metadata.degree
       ])))
       place(bottom + left, dx: 4.2cm, dy: -16.6cm, text(size: 21pt, box(width: 16cm, [#metadata.title])))
 
@@ -47,13 +47,13 @@
 }
 
 #let title_page(
-  metadata
+  metadata  
 ) = {
   set align(center)
   set par(spacing: 0pt, leading: 0.5em)
   text(size: 16pt, [
     Trabajo Fin de Grado\
-    en #metadata.degree
+    #metadata.degree
   ])
   v(2cm)
   text(size: 21pt, weight: "bold", metadata.title)
@@ -87,6 +87,53 @@
   v(13pt)
   line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
   v(15pt)
+}
+
+#let court_info(
+  metadata
+) = {
+  pagebreak(weak: true)
+
+  set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
+  set block(spacing: 0pt)
+  
+  grid.with(columns: (90pt, auto), gutter: 10pt)(
+    text(size: 10pt, [Trabajo Fin de Grado: ]),
+    text(size: 10pt, metadata.title)
+  )
+
+  v(1cm)
+  text(size: 10pt, [Autor: ])
+  text(size: 10pt, metadata.author)
+  v(-0.65cm)
+  text(size: 10pt, [Tutor: ])
+  text(size: 10pt, metadata.tutor)
+  v(.5cm) 
+
+  text(size: 10pt, [El tribunal nombrado para juzgar el trabajo arriba indicado, compuesto por los siguientes profesores: ])
+  v(1.25cm)
+
+  grid.with(columns: (70pt, auto, 90pt), gutter: 0pt)(
+    v(1.5cm),
+    text(size: 10pt, [Presidente:]),
+    v(1.5cm),
+    v(3cm),
+    text(size: 10pt, [Vocal/es:]),
+    v(3cm),
+    v(1.5cm),
+    text(size: 10pt, [Secretario: ]),
+    v(1.5cm)
+  )
+
+  text(size: 10pt, [Acuerdan otorgarle la calificación de: ])
+  v(4.5cm)
+  grid.with(columns: (7.5cm,7cm), gutter: 10pt)(
+    v(3.5cm),
+    text(size: 10pt, [El Secretario del Tribunal:]),
+    v(1.5cm),
+    text(size: 10pt, [Fecha:]),
+    
+  )
 }
 
 #let index() = context {
@@ -162,6 +209,9 @@
   pagebreak()
   pagebreak()
   title_page(metadata)
+  pagebreak()
+  pagebreak()
+  court_info(metadata)
   pagebreak()
   pagebreak()
 
