@@ -1,4 +1,4 @@
-#import "template/lib.typ": tfg_etsi_us_template
+#import "template/lib.typ": tfg_etsi_us_template, pre-content, main-content, post-content, index
 
 #set text(font: ("Times New Roman", "Tinos"))
 
@@ -19,11 +19,38 @@
   // year: 2024
   )
 
-= Agradecimientos
-= Resumen
-= Abstract
-// = Índice Abreviado
-= Índice
-= Notación
+#index() // TODO: change this for outline
+
+#pre-content[
+  // El contenido de aquí usa numeración romana de páginas y los títulos
+  // definidos no están numerados. Usado para índice, agradecimientos,
+  // introducción, abstracto/resumen, ...
+  = Agradecimientos
+  #lorem(100)
+
+  = Resumen
+  #lorem(100)
+
+  = Abstract
+  #lorem(100)
+]
+#main-content[
+  // Las páginas de aquí junto a los títulos definidos usan numeración arábiga
+  // comenzando desde 1. Usado para el contenido principal del TFG
+  = Capítulo
+  #lorem(30)
+
+  == Subsección
+  #lorem(50)
+]
+#post-content[
+  // El contenido de aquí continúa con la numeración de páginas anterior, pero
+  // los títulos definidos no están numerados. Usado para glosario,
+  // bibliografía, índice de figuras...
+  = Bibliografía
+  // Recordar usar la función bibliography para la bibliografía.
+  // Para mantener la lista de referencias se puede usar software como Mendeley.
+  // #bibliography("referencias.bib")
+]
 
 

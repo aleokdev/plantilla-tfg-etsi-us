@@ -132,6 +132,30 @@
     }
 }
 
+#let pre-content(body) = {
+  set page(numbering: "I")
+  set heading(numbering: none)
+
+  body
+}
+
+#let main-content(body) = {
+  set heading(numbering: "1.1")
+  // Start counting from 1, since the pre-content section was counted in roman
+  // numerals.
+  set page(numbering: "1")
+  counter(page).update(1)
+
+  body
+}
+
+#let post-content(body) = {
+  set page(numbering: "1")
+  set heading(numbering: none)
+
+  body
+}
+
 #let tfg_etsi_us_template(
   // El título del TFG
   title,
@@ -179,5 +203,3 @@
 
   body
 }
-
-#let content_heading_numbering(..nums) = nums.pos().map(str).join(".")
