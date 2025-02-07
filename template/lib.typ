@@ -102,10 +102,15 @@
         chapter.body
       }
 
-      let page_number = numbering(
-        loc.page-numbering(),
-        ..counter(page).at(loc),
-      )
+      let page_numbering = loc.page-numbering()
+      let page_number = if page_numbering != none {
+        numbering(
+          page_numbering,
+          ..counter(page).at(loc),
+        )
+      } else {
+        []
+      }
 
       let level_numbering = if chapter.numbering == none {
           none
@@ -153,7 +158,7 @@
       inside: 1in + 13pt,
       // TODO Grab rest from https://www.overleaf.com/learn/latex/Page_size_and_margins
     ),
-    numbering: "1" // TODO same numbering as sample tfg document
+    numbering: none // Will get overriden by xxx-content functions
   )
 
   let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year, dev_mode: true)
@@ -165,8 +170,12 @@
   pagebreak()
   pagebreak()
 
+  // Page numbering doesn't actually start until now, ignore cover and title
+  // pages
+  counter(page).update(1)
+
   show heading.where(level: 1): main_heading
-  index()
+  
 
   body
 }
