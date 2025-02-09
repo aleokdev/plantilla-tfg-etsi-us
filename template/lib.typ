@@ -89,6 +89,18 @@
   v(15pt)
 }
 
+#let main-content_heading(x) = {
+  pagebreak(weak: true)
+
+  set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
+  set block(spacing: 0pt)
+  v(75pt)
+  align(left, x)
+  v(13pt)
+  line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
+  v(15pt)
+}
+
 #let court_info(
   metadata
 ) = {
@@ -144,7 +156,11 @@
       let loc = chapter.location()
 
       let body = if chapter.numbering == none {
-        emph(chapter.body)
+        if chapter.body == [Índice] {
+        } else {
+          emph(chapter.body)
+        }
+
       } else {
         chapter.body
       }
@@ -165,38 +181,57 @@
           context numbering(chapter.numbering, ..counter(heading).at(loc))
         }
 
-      let entry = [#grid(columns: (20pt * (chapter.level - 1), 20pt, 1fr, auto), [], level_numbering, body, page_number)]
+      let entry = [#grid(columns: (30pt * (chapter.level - 1), 30pt + 6pt * (chapter.level - 1), 1fr, auto), [], level_numbering, body, page_number)]
 
-      let entry_spacing = if chapter.numbering != none and chapter.level == 1 { 10pt } else { 5pt }
+      let entry_spacing = if chapter.numbering != none and chapter.level == 1 { 25pt } else { 5pt }
 
-      show grid: set block(above: entry_spacing, below: entry_spacing)
+      show grid: set block(above: entry_spacing)
 
-      if chapter.level == 1 and chapter.numbering != none {
-        strong(entry)
+      if chapter.numbering != none {
+
+          if chapter.level == 1{
+            v(-1em)
+            strong(entry)
+            v(1em) 
+          } else {
+            v(-1em)
+            entry
+            v(1em) 
+          }
+
       } else {
         entry
       }
+
     }
 }
 
 #let pre-content(body) = {
+  show heading.where(level: 1): main_heading
   set page(numbering: "I")
   set heading(numbering: none)
 
   body
+  
 }
 
 #let main-content(body) = {
+ 
+  show heading.where(level: 1): main-content_heading
+  index()
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman
   // numerals.
   set page(numbering: "1")
   counter(page).update(1)
 
+
+
   body
 }
 
 #let post-content(body) = {
+  show heading.where(level: 1): main_heading
   set page(numbering: "1")
   set heading(numbering: none)
 
@@ -248,7 +283,7 @@
   // pages
   counter(page).update(1)
 
-  show heading.where(level: 1): main_heading
+
   
 
   body
