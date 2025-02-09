@@ -149,13 +149,18 @@
 }
 
 #let index(target) = context {
-  if target == "" or target == "normal" or target == "reduced"{ 
-
     if target ==  "" or target == "normal" {[= Índice]}
-    else {[= Índice Reducido]}
+    else if target == "reduced"{[= Índice Reducido]}
+    else if target == "figures"{[= Índice de Figuras]} 
+    else if target == "tables"{[= Índice de Tablas]}
 
     set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
+    
     let chapters = query(heading)
+    let figs = query(figure.where(kind: image))
+    let tbls = query(figure.where(kind: table))
+
+    // Normal and reduced index
     for chapter in chapters {
       let loc = chapter.location()
 
@@ -185,6 +190,7 @@
           context numbering(chapter.numbering, ..counter(heading).at(loc))
         }
 
+      //data for the normal and reduced index
       let entry = [#grid(columns: (30pt * (chapter.level - 1), 30pt + 6pt * (chapter.level - 1), 1fr, auto), [], level_numbering, body, page_number)]
 
       let entry_spacing = if chapter.numbering != none and chapter.level == 1 { 25pt } else { 5pt }
@@ -209,13 +215,59 @@
         }
       }
     }
-  } else if target == "figures"{
 
+    //Figures index
+    for fig in figs{
 
-  } else if target == "tables"{
+      let loc = fig.location()
+      
+      let figures_numbering = {          
+          context numbering(("1.1"), ..counter(heading).at(loc))
+        }
 
-  } else if target == "codes"{}
-}
+      let page_numbering = loc.page-numbering()
+      let page_number =  {
+        numbering(
+          page_numbering,
+          ..counter(page).at(loc),
+        )
+      } 
+
+       //data for the figures
+      let entry_f = [#grid(columns: (4em, 1fr ,1em), figures_numbering , fig.caption,page_number)]
+
+      if (target == "figures"){
+          entry_f
+      }
+
+    }
+
+    //Tables index
+    for tbl in tbls{
+
+      let loc = tbl.location()
+      
+      let tables_numbering = {          
+          context numbering(("1.1"), ..counter(heading).at(loc))
+        }
+
+      let page_numbering = loc.page-numbering()
+      let page_number =  {
+        numbering(
+          page_numbering,
+          ..counter(page).at(loc),
+        )
+      } 
+
+       //data for the tables
+      let entry_t = [#grid(columns: (4em, 1fr ,1em), tables_numbering , tbl.caption,page_number)]
+
+      if (target == "tables"){
+          entry_t
+      }
+
+    }
+  }
 
 #let pre-content(body) = {
   show heading.where(level: 1): main_heading
@@ -229,7 +281,7 @@
 #let main-content(body) = {
  
   show heading.where(level: 1): main-content_heading
-  index("reduced")
+  index("tables")
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman
   // numerals.
