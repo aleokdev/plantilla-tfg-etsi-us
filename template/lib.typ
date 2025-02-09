@@ -165,10 +165,7 @@
       let loc = chapter.location()
 
       let body = if chapter.numbering == none {
-        if chapter.body == [Índice] {
-        } else {
           emph(chapter.body)
-        }
 
       } else {
         chapter.body
@@ -197,7 +194,7 @@
 
       show grid: set block(above: entry_spacing)
 
-      if (target == "" or target == "normal") or (target == "reduced" and chapter.level <= 2){
+      if ((target == "" or target == "normal") or (target == "reduced" and chapter.level <= 2)) and (chapter.body != [Índice]){
         if chapter.numbering != none {
 
             if chapter.level == 1{
@@ -215,6 +212,7 @@
         }
       }
     }
+
 
     //Figures index
     for fig in figs{
@@ -281,7 +279,6 @@
 #let main-content(body) = {
  
   show heading.where(level: 1): main-content_heading
-  index("tables")
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman
   // numerals.
