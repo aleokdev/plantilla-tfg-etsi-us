@@ -148,8 +148,12 @@
   )
 }
 
-#let index() = context {
-    [= Índice]
+#let index(target) = context {
+  if target == "" or target == "normal" or target == "reduced"{ 
+
+    if target ==  "" or target == "normal" {[= Índice]}
+    else {[= Índice Reducido]}
+
     set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
     let chapters = query(heading)
     for chapter in chapters {
@@ -187,23 +191,30 @@
 
       show grid: set block(above: entry_spacing)
 
-      if chapter.numbering != none {
+      if (target == "" or target == "normal") or (target == "reduced" and chapter.level <= 2){
+        if chapter.numbering != none {
 
-          if chapter.level == 1{
-            v(-1em)
-            strong(entry)
-            v(1em) 
-          } else {
-            v(-1em)
-            entry
-            v(1em) 
-          }
+            if chapter.level == 1{
+              v(-1em)
+              strong(entry)
+              v(1em) 
+            } else {
+              v(-1em)
+              entry
+              v(1em) 
+            }
 
-      } else {
-        entry
+        } else {
+          entry
+        }
       }
-
     }
+  } else if target == "figures"{
+
+
+  } else if target == "tables"{
+
+  } else if target == "codes"{}
 }
 
 #let pre-content(body) = {
@@ -218,7 +229,7 @@
 #let main-content(body) = {
  
   show heading.where(level: 1): main-content_heading
-  index()
+  index("reduced")
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman
   // numerals.
