@@ -94,44 +94,44 @@
 ) = {
   pagebreak(weak: true)
 
-  set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
+  set text(font: "TeX Gyre Heros", size: 10pt, stretch: 85%)
   set block(spacing: 0pt)
   
   grid.with(columns: (90pt, auto), gutter: 10pt)(
-    text(size: 10pt, [Trabajo Fin de Grado: ]),
-    text(size: 10pt, metadata.title)
+    text([Trabajo Fin de Grado: ]),
+    text( metadata.title)
   )
 
   v(1cm)
-  text(size: 10pt, [Autor: ])
-  text(size: 10pt, metadata.author)
-  v(-0.65cm)
-  text(size: 10pt, [Tutor: ])
-  text(size: 10pt, metadata.tutor)
+  text([Autor: ])
+  text(metadata.author)
+  linebreak()
+  text([Tutor: ])
+  text(metadata.tutor)
   v(.5cm) 
 
-  text(size: 10pt, [El tribunal nombrado para juzgar el trabajo arriba indicado, compuesto por los siguientes profesores: ])
+  text([El tribunal nombrado para juzgar el trabajo arriba indicado, compuesto por los siguientes profesores: ])
   v(1.25cm)
 
   grid.with(columns: (70pt, auto, 90pt), gutter: 0pt)(
     v(1.5cm),
-    text(size: 10pt, [Presidente:]),
+    text([Presidente:]),
     v(1.5cm),
     v(3cm),
-    text(size: 10pt, [Vocal/es:]),
+    text([Vocal/es:]),
     v(3cm),
     v(1.5cm),
-    text(size: 10pt, [Secretario: ]),
+    text([Secretario: ]),
     v(1.5cm)
   )
 
-  text(size: 10pt, [Acuerdan otorgarle la calificación de: ])
+  text([Acuerdan otorgarle la calificación de: ])
   v(4.5cm)
   grid.with(columns: (7.5cm,7cm), gutter: 10pt)(
     v(3.5cm),
-    text(size: 10pt, [El Secretario del Tribunal:]),
+    text([El Secretario del Tribunal:]),
     v(1.5cm),
-    text(size: 10pt, [Fecha:]),
+    text([Fecha:]),
     
   )
 }
