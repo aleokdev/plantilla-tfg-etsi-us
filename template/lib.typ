@@ -2,7 +2,7 @@
 #import "@preview/droplet:0.3.1": dropcap
 
 
-#let First-Letter(text) = {
+#let first-letter(text) = {
   dropcap(
   height: 3,
   gap: 4pt,
