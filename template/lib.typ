@@ -1,16 +1,4 @@
-#import "@preview/droplet:0.3.1": dropcap
 #let etsi_color = rgb(83, 16, 12)
-
-#let FirstLetter(text) = {
-  dropcap(
-  height: 3,
-  gap: 4pt,
-  hanging-indent: 0em,
-  overhang: 0pt,
-  font: ("Times New Roman", "Tinos"),
-text)
-}
-
 
 #let cover(
   metadata
@@ -97,19 +85,7 @@ text)
   align(end, x.body)
   v(13pt)
   line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
-  v(50pt)
-}
-
-#let main-content_heading(x) = {
-  pagebreak(weak: true)
-
-  set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
-  set block(spacing: 0pt)
-  v(75pt)
-  align(left, x)
-  v(13pt)
-  line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
-  v(50pt)
+  v(15pt)
 }
 
 #let court_info(
@@ -243,7 +219,7 @@ text)
       } 
 
        //data for the figures
-      let entry_f = [#grid(columns: (4em, 1fr ,1em), figures_numbering , fig.caption,page_number)]
+      let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), figures_numbering,fig.caption, h(1em),page_number)]
 
       if (target == "figures"){
           entry_f
@@ -269,7 +245,7 @@ text)
       } 
 
        //data for the tables
-      let entry_t = [#grid(columns: (4em, 1fr ,1em), tables_numbering , tbl.caption,page_number)]
+      let entry_t = [#grid(columns: (4em, 1fr, 1em, 1em), tables_numbering , tbl.caption,h(1em),page_number)]
 
       if (target == "tables"){
           entry_t
@@ -279,7 +255,6 @@ text)
   }
 
 #let pre-content(body) = {
-  show heading.where(level: 1): main_heading
   set page(numbering: "I")
   set heading(numbering: none)
 
@@ -289,7 +264,6 @@ text)
 
 #let main-content(body) = {
  
-  show heading.where(level: 1): main-content_heading
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman
   // numerals.
@@ -302,7 +276,6 @@ text)
 }
 
 #let post-content(body) = {
-  show heading.where(level: 1): main_heading
   set page(numbering: "1")
   set heading(numbering: none)
 
@@ -354,8 +327,7 @@ text)
   // pages
   counter(page).update(1)
 
-
-  
+  show heading.where(level: 1): main_heading
 
   body
 }
