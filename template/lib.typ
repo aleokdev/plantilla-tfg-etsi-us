@@ -1,4 +1,16 @@
 #let etsi_color = rgb(83, 16, 12)
+#import "@preview/droplet:0.3.1": dropcap
+
+
+#let First-Letter(text) = {
+  dropcap(
+  height: 3,
+  gap: 4pt,
+  hanging-indent: 0em,
+  overhang: 0pt,
+  font: ("Times New Roman", "Tinos"),
+text)
+}
 
 
 #let cover(
