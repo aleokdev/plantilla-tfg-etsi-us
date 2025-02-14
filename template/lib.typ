@@ -135,29 +135,28 @@
   )
 }
 
-#let index(target) = context {
-    if target ==  "" or target == "normal" {[= Índice]}
-    else if target == "reduced"{[= Índice Reducido]}
-    else if target == "figures"{[= Índice de Figuras]} 
-    else if target == "tables"{[= Índice de Tablas]}
+
+#let index(name: [Índice], target: heading) = context {
+  
+    [= #name]
 
     set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
     
-    let chapters = query(heading)
-    let figs = query(figure.where(kind: image))
-    let tbls = query(figure.where(kind: table))
+    let items = query(selector(target))
 
     // Normal and reduced index
-    for chapter in chapters {
-      let loc = chapter.location()
+    for item in items {
+      let loc = item.location()
 
-      let body = if chapter.numbering == none {
-          emph(chapter.body)
+      //Choose between normal and emph text
+      let body = if item.numbering == none {
+          emph(item.body)
 
       } else {
-        chapter.body
+        item.body
       }
 
+      //Page assignation
       let page_numbering = loc.page-numbering()
       let page_number = if page_numbering != none {
         numbering(
@@ -168,91 +167,47 @@
         []
       }
 
-      let level_numbering = if chapter.numbering == none {
+      //section number assignation
+      let item_numbering = if item.numbering == none {
           none
         } else {
-          context numbering(chapter.numbering, ..counter(heading).at(loc))
+          context numbering(item.numbering, ..counter(heading).at(loc))
         }
 
-      //data for the normal and reduced index
-      let entry = [#grid(columns: (30pt * (chapter.level - 1), 30pt + 6pt * (chapter.level - 1), 1fr, auto), [], level_numbering, body, page_number)]
+      //data representation
+      if(target == heading){
+        let entry = [#grid(columns: (30pt * (item.level - 1), 30pt + 6pt * (item.level - 1), 1fr, auto), [], item_numbering, body, page_number)]
 
-      let entry_spacing = if chapter.numbering != none and chapter.level == 1 { 25pt } else { 5pt }
-
-      show grid: set block(above: entry_spacing)
-
-      if ((target == "" or target == "normal") or (target == "reduced" and chapter.level <= 2)) and (chapter.body != [Índice]){
-        if chapter.numbering != none {
-
-            if chapter.level == 1{
-              v(-1em)
-              strong(entry)
-              v(1em) 
-            } else {
-              v(-1em)
-              entry
-              v(1em) 
-            }
-
-        } else {
-          entry
-        }
-      }
-    }
-
-
-    //Figures index
-    for fig in figs{
-
-      let loc = fig.location()
+        let entry_spacing = if item.numbering != none and item.level == 1 { 25pt } else { 5pt }
       
-      let figures_numbering = {          
-          context numbering(("1.1"), ..counter(heading).at(loc))
-        }
-
-      let page_numbering = loc.page-numbering()
-      let page_number =  {
-        numbering(
-          page_numbering,
-          ..counter(page).at(loc),
-        )
-      } 
-
-       //data for the figures
-      let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), figures_numbering,fig.caption, h(1em),page_number)]
-
-      if (target == "figures"){
-          entry_f
-      }
-
-    }
-
-    //Tables index
-    for tbl in tbls{
-
-      let loc = tbl.location()
+        show grid: set block(above: entry_spacing)
       
-      let tables_numbering = {          
-          context numbering(("1.1"), ..counter(heading).at(loc))
-        }
+       if (target == heading) or ( item.level <= 2 ){
+          if item.numbering != none {
 
-      let page_numbering = loc.page-numbering()
-      let page_number =  {
-        numbering(
-          page_numbering,
-          ..counter(page).at(loc),
-        )
-      } 
+              if item.level == 1{
+                v(-1em)
+                strong(entry)
+                v(1em) 
+                } else {
+                v(-1em)
+                entry
+                v(1em) 
+               }
 
-       //data for the tables
-      let entry_t = [#grid(columns: (4em, 1fr, 1em, 1em), tables_numbering , tbl.caption,h(1em),page_number)]
+          } else {
+             entry
+          }
+       }
+      } else {
+        let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), item_numbering,item.caption, h(1em),page_number)]
 
-      if (target == "tables"){
-          entry_t
+        entry_f
       }
-
     }
   }
+
+
 
 #let pre-content(body) = {
   set page(numbering: "I")
@@ -308,7 +263,7 @@
       inside: 1in + 13pt,
       // TODO Grab rest from https://www.overleaf.com/learn/latex/Page_size_and_margins
     ),
-    numbering: none // Will get overriden by xxx-content functions
+    numbering: none // Will get overwritten by xxx-content functions
   )
 
   let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year, dev_mode: true)
