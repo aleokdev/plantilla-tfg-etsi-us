@@ -136,9 +136,9 @@
 }
 
 
-#let index(name: [Índice], target: heading) = context {
+#let index(title: [Índice], target: heading, lvl: 1) = context {
   
-    [= #name]
+    [= #title]
 
     set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
     
@@ -175,13 +175,15 @@
         }
 
       //data representation
-      if(target == heading){
+
+      //The first 'if' manages the heading configuration (By default it allows you to index the titles of whatever level you want)
+      if(target == heading and (lvl == 1 or item.level <= lvl)){
         let entry = [#grid(columns: (30pt * (item.level - 1), 30pt + 6pt * (item.level - 1), 1fr, auto), [], item_numbering, body, page_number)]
 
         let entry_spacing = if item.numbering != none and item.level == 1 { 25pt } else { 5pt }
       
         show grid: set block(above: entry_spacing)
-      
+    
        if (target == heading) or ( item.level <= 2 ){
           if item.numbering != none {
 
@@ -199,6 +201,11 @@
              entry
           }
        }
+      
+      //The second 'if' helps you with the title levels configuration
+      } else if(target == heading) {[]
+
+      //The last case allows you to manage each type of figure index
       } else {
         let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), item_numbering,item.caption, h(1em),page_number)]
 
