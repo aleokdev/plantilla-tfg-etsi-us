@@ -176,8 +176,8 @@
 
       //data representation
 
-      //The first 'if' manages the heading configuration (By default it allows you to index the titles of whatever level you want) 
-      if(target != figure.where(kind:image) and target != figure.where(kind:table) and target != figure.where(kind:raw)){
+      //The first 'if' manages is for headings 
+      if item.at("level",default:none) != none{
         let entry = [#grid(columns: (30pt * (item.level - 1), 30pt + 6pt * (item.level - 1), 1fr, auto), [], item_numbering, body, page_number)]
 
         let entry_spacing = if item.numbering != none and item.level == 1 { 25pt } else { 5pt }
@@ -202,7 +202,7 @@
           }
        }
       
-      //The last case allows you to manage each type of figure index
+      //The second if is for figures 
       } else {
         let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), item_numbering,item.caption, h(1em),page_number)]
 
