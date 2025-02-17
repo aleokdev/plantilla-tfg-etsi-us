@@ -136,7 +136,7 @@
 }
 
 
-#let index(title: [Índice], target: heading, lvl: 1) = context {
+#let index(title: [Índice], target: heading) = context {
   
     [= #title]
 
@@ -176,8 +176,8 @@
 
       //data representation
 
-      //The first 'if' manages the heading configuration (By default it allows you to index the titles of whatever level you want)
-      if(target == heading and (lvl == 1 or item.level <= lvl)){
+      //The first 'if' manages the heading configuration (By default it allows you to index the titles of whatever level you want) 
+      if(target != figure.where(kind:image) and target != figure.where(kind:table) and target != figure.where(kind:raw)){
         let entry = [#grid(columns: (30pt * (item.level - 1), 30pt + 6pt * (item.level - 1), 1fr, auto), [], item_numbering, body, page_number)]
 
         let entry_spacing = if item.numbering != none and item.level == 1 { 25pt } else { 5pt }
@@ -202,9 +202,6 @@
           }
        }
       
-      //The second 'if' helps you with the title levels configuration
-      } else if(target == heading) {[]
-
       //The last case allows you to manage each type of figure index
       } else {
         let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), item_numbering,item.caption, h(1em),page_number)]
