@@ -1,4 +1,16 @@
 #let etsi_color = rgb(83, 16, 12)
+#import "@preview/droplet:0.3.1": dropcap
+
+
+#let first-letter(text) = {
+  dropcap(
+  height: 3,
+  gap: 4pt,
+  hanging-indent: 0em,
+  overhang: 0pt,
+  font: ("Times New Roman", "Tinos"),
+text)
+}
 
 #let cover(
   metadata
@@ -82,10 +94,14 @@
   set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
   set block(spacing: 0pt)
   v(75pt)
-  align(end, x.body)
+   if x.numbering == none{
+    align(end, x.body) 
+  } else {
+    align(left, x)
+  }
   v(13pt)
   line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
-  v(15pt)
+  v(50pt)
 }
 
 #let court_info(
