@@ -12,7 +12,6 @@
 text)
 }
 
-
 #let cover(
   metadata
 ) = {
@@ -152,19 +151,27 @@ text)
   )
 }
 
-#let index() = context {
-    [= Índice]
-    set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
-    let chapters = query(heading)
-    for chapter in chapters {
-      let loc = chapter.location()
 
-      let body = if chapter.numbering == none {
-        emph(chapter.body)
+#let index(title: [Índice], target: heading) = context {
+  
+    [= #title]
+
+    set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
+    
+    let items = query(selector(target))
+
+    for item in items {
+      let loc = item.location()
+
+      // Choose between normal and emph text
+      let body = if item.numbering == none {
+          emph(item.body)
+
       } else {
-        chapter.body
+        item.body
       }
 
+      // Page assignation
       let page_numbering = loc.page-numbering()
       let page_number = if page_numbering != none {
         numbering(
@@ -175,37 +182,64 @@ text)
         []
       }
 
-      let level_numbering = if chapter.numbering == none {
+      // Section number assignation
+      let item_numbering = if item.numbering == none {
           none
         } else {
-          context numbering(chapter.numbering, ..counter(heading).at(loc))
+          context numbering("1.", ..counter(heading).at(loc))
         }
 
-      let entry = [#grid(columns: (20pt * (chapter.level - 1), 20pt, 1fr, auto), [], level_numbering, body, page_number)]
+      // Data representation
 
-      let entry_spacing = if chapter.numbering != none and chapter.level == 1 { 10pt } else { 5pt }
+      // The first 'if' is for elements that have levels, i.e. headings 
+      if item.at("level",default:none) != none{
+        let entry = [#grid(columns: (30pt * (item.level - 1), 30pt + 6pt * (item.level - 1), 1fr, auto), [], item_numbering, body, page_number)]
 
-      show grid: set block(above: entry_spacing, below: entry_spacing)
+        let entry_spacing = if item.numbering != none and item.level == 1 { 25pt } else { 5pt }
+      
+        show grid: set block(above: entry_spacing)
+    
+       
+          if item.numbering != none {
 
-      if chapter.level == 1 and chapter.numbering != none {
-        strong(entry)
+              if item.level == 1{
+                v(-1em)
+                strong(entry)
+                v(1em) 
+                } else {
+                v(-1em)
+                entry
+                v(1em) 
+               }
+
+          } else {
+             entry
+          }
+       
+      
+      // The second if is for elements with no levels, e.g. figures
       } else {
-        entry
+        let entry_f = [#grid(columns: (4em, 1fr, 1em, 1em), item_numbering,item.caption, h(1em),page_number)]
+
+        entry_f
       }
     }
-}
+  }
+
+
 
 #let pre-content(body) = {
   set page(numbering: "I")
   set heading(numbering: none)
 
   body
+  
 }
 
 #let main-content(body) = {
+ 
   set heading(numbering: "1.1")
-  // Start counting from 1, since the pre-content section was counted in roman
-  // numerals.
+  // Start counting from 1, since the pre-content section was counted in roman numerals.
   set page(numbering: "1")
   counter(page).update(1)
 
@@ -245,7 +279,7 @@ text)
       inside: 1in + 13pt,
       // TODO Grab rest from https://www.overleaf.com/learn/latex/Page_size_and_margins
     ),
-    numbering: none // Will get overriden by xxx-content functions
+    numbering: none // Will get overwritten by xxx-content functions
   )
 
   let metadata = (title: title, degree: degree, author: author, tutor: tutor, tutor_title: tutor_title, department: department, year: year, dev_mode: true)
@@ -265,7 +299,6 @@ text)
   counter(page).update(1)
 
   show heading.where(level: 1): main_heading
-  
 
   body
 }
