@@ -186,7 +186,7 @@ text)
       let item_numbering = if item.numbering == none {
           none
         } else {
-          context numbering(item.numbering, ..counter(heading).at(loc))
+          context numbering("1.", ..counter(heading).at(loc))
         }
 
       // Data representation
@@ -199,7 +199,7 @@ text)
       
         show grid: set block(above: entry_spacing)
     
-       if ( item.level <= 2 ){
+       
           if item.numbering != none {
 
               if item.level == 1{
@@ -215,7 +215,7 @@ text)
           } else {
              entry
           }
-       }
+       
       
       // The second if is for elements with no levels, e.g. figures
       } else {
