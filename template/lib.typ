@@ -166,12 +166,12 @@ text)
       // Choose between normal and emph text
       let body = if item.numbering == none {
           emph(item.body)
-
       } else {
         item.body
       }
 
       // Page assignation
+      //let page_numbering  = counter(page).get().first()
       let page_numbering = loc.page-numbering()
       let page_number = if page_numbering != none {
         numbering(
@@ -227,9 +227,10 @@ text)
   }
 
 
-#let pretty-header(numeration: "1") = {
-   context {
-
+#let pretty-header(numeration: "1", main: false) = {
+  if(main){
+      context {
+    // Header for the main content
     let titles = query(selector(heading.where(level: 1).or(heading.where(level:2))))
 
     let title_left
@@ -238,8 +239,6 @@ text)
 
     let page = counter(page).get().first()
     
-
-
     for title in titles {
     let loc = title.location() 
     let title_numbering = if title.numbering == none {
@@ -248,25 +247,30 @@ text)
           context numbering("1.", ..counter(heading).at(loc))
         } 
 
+        // Chapter numbering for the left headers
         if(title.level == 1){
          chapter = [Capítulo ] + [#numbering("1",..counter(heading).at(loc))] + [. ] 
         } else {
          none
         }
 
+        // Left headers for the main content
         if locate(loc).page() <= here().page() and title.level == 1 {
           title_left = strong([#numbering(numeration,page)] + h(1.4em) + chapter + title.body);
         }
 
+        // Right headers for the main content
         if locate(loc).page() <= here().page() and title.level == 2 {
           title_right = strong([#title_numbering ]+ title.body + h(1.4em) + [#numbering(numeration,page)]);
         }
 
+        // Skip the first header of a section
         if(title.level == 1 and locate(loc).page() == here().page()){
           title_left = none;
         }
     }
 
+    // Header placement
     if title_left != none{
     if calc.odd(page){
 
@@ -281,13 +285,17 @@ text)
     line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
   
     }
+    } else {
+
+      // If there is no header, place the page numbering in the middle
+      place(top + center , dx: -.025em, dy: 72.028em,[#numbering(numeration,page)])
     }
    }
-   }
 
-#let pretty-header2(numeration: "1") = {
-   context {
+  } else {
 
+       context {
+    // Header for the others type of content    
     let titles = query(selector(heading.where(level: 1)))
 
     let title_left
@@ -295,9 +303,7 @@ text)
     let title_right
     let num_right
 
-    let page = counter(page).get().first()
-    
-
+    let page = counter(page).get().first() 
 
     for title in titles {
     let loc = title.location() 
@@ -307,6 +313,7 @@ text)
           context numbering("1.", ..counter(heading).at(loc))
         } 
 
+        // Prepare both left and right headers parts
         if locate(loc).page() <= here().page()  {
           num_left = strong([#numbering(numeration,page)]);
           title_left = strong(title.body);
@@ -314,11 +321,13 @@ text)
           title_right = strong(title.body);
         }
 
+        // Skip the first header of a section
         if(locate(loc).page() == here().page()){
           title_left = none;
         }
     }
 
+    // Header placement
     if title_left != none{
     if calc.odd(page){
 
@@ -335,35 +344,35 @@ text)
     line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
   
     }
+    } else {
+      // If there is no header, place the page numbering in the middle
+      place(top + center , dx: -.025em, dy: 72.028em,[#numbering(numeration,page)])
     }
    }
    }
-
-
-
+  }
 
 #let pre-content(body) = {
-  set page(numbering: "I", header: pretty-header2())
+  set page(numbering:"I", header: pretty-header(numeration: "I", main: false),footer:[])
   //set page(numbering: "I")
   set heading(numbering: none)
   
   body
-  
 }
 
 #let main-content(body) = {
  
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman numerals.
-  set page(numbering: "1", header: pretty-header())
+  set page(numbering: "1", header: pretty-header(numeration: "1.", main: true),footer:[])
   counter(page).update(1)
 
   body
 }
 
 #let post-content(body) = {
-  //set page(numbering: "1", header: pretty-header())
-  set page(numbering: "1")
+  set page(numbering: "1", header: pretty-header(numeration: "1.", main: false),footer:[])
+  //set page(numbering: "1")
   set heading(numbering: none)
 
   body
