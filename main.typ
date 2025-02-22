@@ -26,19 +26,31 @@
   // introducción, abstracto/resumen, ...
   = Agradecimientos
   #lorem(100)
+  #pagebreak()
+  #pagebreak()
 
   = Resumen
   #lorem(100)
+  #pagebreak()
+  #pagebreak()
 
   = Abstract
   #lorem(100)
+  #pagebreak()
+  #pagebreak()
 
   // Ejemplo de uso de Índices personalizados
   #index(title:[Índice reducido hasta nivel 2],target:(heading.where(level: 1).or(heading.where(level: 2))))
+  #pagebreak()
+  #pagebreak()
 
   #index(title:[Índice reducido hasta nivel 3],target:(heading.where(level: 1).or(heading.where(level: 2)).or(heading.where(level: 3))))
+  #pagebreak()
+  #pagebreak()
 
   #index(title:[Índice sin reducir],target:(heading))
+  #pagebreak()
+  #pagebreak()
 ]
 #main-content[
   // Las páginas de aquí junto a los títulos definidos usan numeración arábiga
@@ -46,9 +58,12 @@
   = Capítulo
   // Ejemplo de uso de la función first-letter
   #first-letter([#lorem(50)])
-
+  #pagebreak()
+  #pagebreak()
   == Subsección
   #lorem(50)
+  #pagebreak()
+  #pagebreak()
 
   === Subsección2
   #lorem(50)
@@ -70,12 +85,17 @@
 
   // Ejemplo de uso de Índice personalizados para figuras y tablas
   #index(title:[Índice de Figuras],target:(figure.where(kind:image)))
-  
+  #pagebreak()
+  #pagebreak()
+
   #index(title:[Índice de Tablas],target:(figure.where(kind:table)))
+  #pagebreak()
+  #pagebreak()
 
   // los títulos definidos no están numerados. Usado para glosario,
   // bibliografía, índice de figuras...
   = Bibliografía
+  #pagebreak()
   // Recordar usar la función bibliography para la bibliografía.
   // Para mantener la lista de referencias se puede usar software como Mendeley.
   // #bibliography("referencias.bib")

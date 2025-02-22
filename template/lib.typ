@@ -354,7 +354,6 @@ text)
 
 #let pre-content(body) = {
   set page(numbering:"I", header: pretty-header(numeration: "I", main: false),footer:[])
-  //set page(numbering: "I")
   set heading(numbering: none)
   
   body
@@ -363,15 +362,15 @@ text)
 #let main-content(body) = {
  
   set heading(numbering: "1.1")
-  // Start counting from 1, since the pre-content section was counted in roman numerals.
-  set page(numbering: "1", header: pretty-header(numeration: "1.", main: true),footer:[])
+  set page(numbering: "1", header: pretty-header(numeration: "1", main: true),footer:[])
   counter(page).update(1)
+    // Start counting from 1, since the pre-content section was counted in roman numerals.
 
   body
 }
 
 #let post-content(body) = {
-  set page(numbering: "1", header: pretty-header(numeration: "1.", main: false),footer:[])
+  set page(numbering: "1", header: pretty-header(numeration: "1", main: false),footer:[])
   //set page(numbering: "1")
   set heading(numbering: none)
 
