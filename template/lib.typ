@@ -227,11 +227,192 @@ text)
   }
 
 
+#let pretty-header(numeration: "1") = {
+   context {
+
+    let titles = query(selector(heading.where(level: 1).or(heading.where(level:2))))
+
+    let title_left
+    let title_right
+    let chapter 
+
+    let page = counter(page).get().first()
+    
+
+
+    for title in titles {
+    let loc = title.location() 
+    let title_numbering = if title.numbering == none {
+          none
+        } else {
+          context numbering("1.", ..counter(heading).at(loc))
+        } 
+
+        if(title.level == 1){
+         chapter = [Capítulo ] + [#numbering("1",..counter(heading).at(loc))] + [. ] 
+        } else {
+         none
+        }
+
+        if locate(loc).page() <= here().page() and title.level == 1 {
+          title_left = strong([#numbering(numeration,page)] + h(1.4em) + chapter + title.body);
+        }
+
+        if locate(loc).page() <= here().page() and title.level == 2 {
+          title_right = strong([#title_numbering ]+ title.body + h(1.4em) + [#numbering(numeration,page)]);
+        }
+
+        if(title.level == 1 and locate(loc).page() == here().page()){
+          title_left = none;
+        }
+    }
+    
+    if title_left != none{
+    if calc.odd(page){
+
+    set text(1em)  
+    place(top + right, dx: + 2em, dy: 3.5em,[#title_right] )
+    line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(0pt,-10pt), end:(40em + 25pt,-10pt))
+
+    } else {
+   
+    set text(1em)  
+    place(top + left, dx: -2em, dy: 3.5em,[#title_left] )
+    line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
+  
+    }
+    }
+   }
+   }
+}
+
+/*#let pretty-header = {
+   context {
+
+    let titles_L = query(selector(heading.where(level: 1)))
+    let title_left  
+    let titles_R = query(selector(heading.where(level: 2)))
+    let title_right 
+
+    let page = counter(page).get().first()
+
+    for title_L in titles_L {
+      let loc = title_L.location() 
+      let title_numbering = if title_L.numbering == none {
+          none
+        } else {
+          context numbering("1.", ..counter(heading.where(level: 1)).at(loc))
+        }
+      
+      // Choose the correct page numbering notation for the left header
+      if locate(loc).page() <= here().page() {
+
+        let chapter = [Capítulo ] + [#title_numbering] + [ ]
+
+        if(locate(loc).page() == here().page()){
+          place(center+bottom, dx: 0em, dy: 67.2em,[#page])
+        }
+      
+        if title_L.numbering != none {
+          title_left = strong([#page] + h(1.4em) + chapter + title_L.body);
+        } else {
+          title_left = strong([#numbering("I", page)] + h(1.4em) + chapter + title_L.body);
+        }
+      }
+    }
+
+    for title_R in titles_R {
+      let loc = title_R.location()
+      let title_numbering = if title_R.numbering == none {
+          none
+        } else {
+          context numbering("1.", ..counter(heading).at(loc))
+        } 
+      
+      // Choose the correct page numbering notation for the left header
+      if locate(loc).page() <= here().page() {
+
+        if(locate(loc).page() == here().page()){
+          place(center+bottom, dx: 0em, dy: 67.2em,[#page])
+        }
+      
+        if title_R.numbering != none {
+          title_right = strong([#title_numbering ] + title_R.body + h(1.4em) + [#page]);
+        } else {
+          title_right = strong(title_R.body + h(1.4em) + [#numbering("I", page)]);
+        }
+      }
+    }
+
+    // Align the header to the left or right depending on the page number
+  if calc.odd(page){
+
+    set text(1em)  
+    place(top + right, dx: + 2em, dy: 3.5em,[#title_right] )
+    line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(0pt,-10pt), end:(40em + 25pt,-10pt))
+
+  } else {
+   
+    set text(1em)  
+    place(top + left, dx: -2em, dy: 3.5em,[#title_left] )
+    line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
+  
+  }
+   }
+}*/
+/*#let pretty-header = {
+   context {
+ 
+  let titles = query(selector(heading)) 
+  let title_left 
+  let title_right 
+  let chapter
+  let pag = counter(page).get().first()
+
+  for title in titles {
+    let loc = title.location() 
+     
+    // Choose the correct page numbering notation 
+    if locate(loc).page() <= here().page() {
+      if(title.level == 1){
+     chapter = [Capítulo ] + [#numbering("1",..counter(heading).at(loc))] + [. ] 
+     } else {
+      none
+     }
+      
+      if title.numbering != none {
+     title_left = strong([#pag] + h(1.4em) + chapter + title.body);
+     title_right = strong( title.body + h(1.4em) + [#pag]);
+     }
+     else {
+     title_left = strong([#numbering("I", pag)] + h(1.4em) + chapter + title.body);
+     title_right = strong(title.body + h(1.4em) + [#numbering("I", pag)]);
+     }
+    }
+  }
+  
+  // Align the header to the left or right depending on the page number
+  if calc.odd(pag){
+
+    set text(1em)  
+    place(top + right, dx: + 2em, dy: 3.5em,[#title_right] )
+    line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(0pt,-10pt), end:(40em + 25pt,-10pt))
+
+  } else {
+   
+    set text(1em)  
+    place(top + left, dx: -2em, dy: 3.5em,[#title_left] )
+    line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
+  
+  }
+  
+  }
+}*/
 
 #let pre-content(body) = {
-  set page(numbering: "I")
+  set page(numbering: "I", header: pretty-header())
   set heading(numbering: none)
-
+  
   body
   
 }
@@ -240,14 +421,14 @@ text)
  
   set heading(numbering: "1.1")
   // Start counting from 1, since the pre-content section was counted in roman numerals.
-  set page(numbering: "1")
+  set page(numbering: "1", header: pretty-header())
   counter(page).update(1)
 
   body
 }
 
 #let post-content(body) = {
-  set page(numbering: "1")
+  set page(numbering: "1", header: pretty-header())
   set heading(numbering: none)
 
   body
