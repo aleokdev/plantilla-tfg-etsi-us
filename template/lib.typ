@@ -4,7 +4,7 @@
 
 #let first-letter(text) = {
   dropcap(
-  height: 3,
+  height: 2,
   gap: 4pt,
   hanging-indent: 0em,
   overhang: 0pt,
@@ -171,7 +171,6 @@ text)
       }
 
       // Page assignation
-      //let page_numbering  = counter(page).get().first()
       let page_numbering = loc.page-numbering()
       let page_number = if page_numbering != none {
         numbering(
@@ -227,7 +226,7 @@ text)
   }
 
 
-#let pretty-header(numeration: "1", main: false) = {
+#let page-header(numeration: "1", main: false) = {
   if(main){
       context {
     // Header for the main content
@@ -273,14 +272,12 @@ text)
     // Header placement
     if title_left != none{
     if calc.odd(page){
-
-    set text(1em)  
+ 
     place(top + right, dx: + 2em, dy: 3.5em,[#title_right] )
     line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(0pt,-10pt), end:(40em + 25pt,-10pt))
 
     } else {
-   
-    set text(1em)  
+    
     place(top + left, dx: -2em, dy: 3.5em,[#title_left] )
     line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
   
@@ -331,14 +328,12 @@ text)
     if title_left != none{
     if calc.odd(page){
 
-    set text(1em)  
     place(top + right, dx: + 2em, dy: 3.5em,[#num_right])
     place(top + center, dx: 0em, dy: 3.5em,[#title_right])
     line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(0pt,-10pt), end:(40em + 25pt,-10pt))
 
     } else {
    
-    set text(1em)  
     place(top + left, dx: -2em, dy: 3.5em,[#num_left])
     place(top + center, dx: + 0em, dy: 3.5em,[#title_left] )
     line(length: 100%, stroke: (paint: gray, thickness: 1pt), start:(-25pt,-10pt), end:(40em,-10pt))
@@ -353,7 +348,7 @@ text)
   }
 
 #let pre-content(body) = {
-  set page(numbering:"I", header: pretty-header(numeration: "I", main: false),footer:[])
+  set page(numbering:"I", header: page-header(numeration: "I", main: false),footer:[])
   set heading(numbering: none)
   
   body
@@ -362,7 +357,7 @@ text)
 #let main-content(body) = {
  
   set heading(numbering: "1.1")
-  set page(numbering: "1", header: pretty-header(numeration: "1", main: true),footer:[])
+  set page(numbering: "1", header: page-header(numeration: "1", main: true),footer:[])
   counter(page).update(1)
     // Start counting from 1, since the pre-content section was counted in roman numerals.
 
@@ -370,7 +365,7 @@ text)
 }
 
 #let post-content(body) = {
-  set page(numbering: "1", header: pretty-header(numeration: "1", main: false),footer:[])
+  set page(numbering: "1", header: page-header(numeration: "1", main: false),footer:[])
   //set page(numbering: "1")
   set heading(numbering: none)
 
