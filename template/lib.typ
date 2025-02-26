@@ -138,17 +138,24 @@
 #let main_heading(x) = {
   pagebreak(weak: true)
 
-  set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
-  set block(spacing: 0pt)
-  v(75pt)
-  if x.numbering == none {
-    align(end, x.body)
-  } else {
-    align(left, x)
-  }
-  v(13pt)
-  line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
-  v(50pt)
+  place(
+    top + left,
+    scope: "parent",
+    float: true,
+    {
+      set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
+      set block(spacing: 0pt)
+      v(75pt)
+      if x.numbering == none {
+        align(end, x.body)
+      } else {
+        align(left, x)
+      }
+      v(13pt)
+      line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
+      v(27pt)
+    },
+  )
 }
 
 #let court_info(
