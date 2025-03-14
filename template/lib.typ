@@ -242,6 +242,9 @@
 
     // Data representation
 
+    // Show the section number, page number and entry name on the same page
+    set block(breakable: false)
+    
     // The first 'if' is for elements that have levels, i.e. headings
     if item.at("level", default: none) != none {
       let entry = [#grid(
