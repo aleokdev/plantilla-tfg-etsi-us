@@ -136,7 +136,11 @@
 }
 
 #let main_heading(x) = {
-  pagebreak(weak: true)
+  // Show the heading on a new page, on the front side. Ignore the header if we create any empty pages
+  {
+    set page(header: none)
+    pagebreak(weak: true, to: "odd")
+  }
 
   place(
     top + left,
