@@ -253,7 +253,7 @@
     
     // The first 'if' is for elements that have levels, i.e. headings
     if item.at("level", default: none) != none {
-      let entry = [#grid(
+      let entry = link(loc)[#grid(
           columns: (30pt * (item.level - 1), 30pt + 6pt * (item.level - 1), 1fr, auto),
           [], item_numbering, body, page_number,
         )]
@@ -280,7 +280,7 @@
 
       // The second if is for elements with no levels, e.g. figures
     } else {
-      let entry_f = [#grid(
+      let entry_f = link(loc)[#grid(
           columns: (4em, 1fr, 1em, 1em),
           item_numbering, item.caption, h(1em), page_number,
         )]
