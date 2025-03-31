@@ -210,7 +210,9 @@
 
 
 #let index(title: [Índice], target: heading) = context {
-  [= #title]
+  if title != none {
+    [= #title]
+  }
 
   set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
 
