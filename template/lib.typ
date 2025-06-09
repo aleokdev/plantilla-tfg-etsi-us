@@ -363,7 +363,7 @@
         }
       } else {
         // If there is no header, place the page numbering in the middle
-        place(top + center, dx: -.025em, dy: 72.028em, [#numbering(numeration, page)])
+        place(top + center, dx: -.025em, dy: 28cm, [#numbering(numeration, page)])
       }
     }
   } else {
