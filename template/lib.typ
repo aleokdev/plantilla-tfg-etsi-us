@@ -1,6 +1,9 @@
 #let etsi_color = rgb(83, 16, 12)
 #import "@preview/droplet:0.3.1": dropcap
 
+#let chapter-at(loc) = {
+  context numbering("1", ..counter(heading.where(level: 1)).at(loc))
+}
 
 #let first-letter(text) = {
   dropcap(
@@ -142,6 +145,9 @@
     pagebreak(weak: true, to: "odd")
   }
 
+  // Reset the counter for all figure types that have appeared thus far
+  context { for fig in query(figure) { fig.counter.update(0) } }
+
   place(
     top + left,
     scope: "parent",
@@ -280,6 +286,13 @@
 
       // The second if is for elements with no levels, e.g. figures
     } else {
+      // Display figure counter as x.y where x is the chapter number it is in and y
+      // is the figure number of that type in that chapter
+      show figure.caption: it => {
+        let figure_idx = numbering("1", ..it.counter.at(loc))
+        context [#it.supplement #chapter-at(loc).#figure_idx;#it.separator #it.body]
+      }
+      
       let entry_f = link(loc)[#grid(
           columns: (4em, 1fr, 1em, 1em),
           item_numbering, item.caption, h(1em), page_number,
@@ -479,6 +492,26 @@
   counter(page).update(1)
 
   show heading.where(level: 1): main_heading
+
+  // Display figure counter as x.y where x is the chapter number it is in and y
+  // is the figure number of that type in that chapter
+  show figure: it => {
+    show figure.caption: it => {
+      context [#it.supplement #chapter-at(here()).#it.counter.display("1.1");#it.separator #it.body]
+    }
+    it
+  }
+  // Do the same for references to those figures
+  show ref: it => {
+    if it.element != none and it.element.at("caption", default: none) != none {
+      let figure = it.element
+      let caption = figure.caption
+      let figure_idx = numbering("1", ..figure.counter.at(it.target))
+      [#caption.supplement #chapter-at(it.target).#figure_idx]
+    } else {
+      it
+    }
+  }
 
   body
 }
