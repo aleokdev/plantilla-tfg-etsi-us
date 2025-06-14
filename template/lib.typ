@@ -220,7 +220,7 @@
     [= #title]
   }
 
-  set text(font: "TeX Gyre Heros", size: 12pt, stretch: 85%)
+  set text(font: "TeX Gyre Heros", stretch: 85%)
 
   let items = query(selector(target))
 
@@ -288,9 +288,12 @@
     } else {
       // Display figure counter as x.y where x is the chapter number it is in and y
       // is the figure number of that type in that chapter
-      show figure.caption: it => {
+      show figure.caption: it => context {
         let figure_idx = numbering("1", ..it.counter.at(loc))
-        context [#it.supplement #chapter-at(loc).#figure_idx;#it.separator #it.body]
+        grid(columns: 2,
+          strong[#it.supplement #chapter-at(loc).#figure_idx],
+          [#it.separator #it.body]
+        )
       }
       
       let entry_f = link(loc)[#grid(
@@ -305,6 +308,8 @@
 
 
 #let page-header(numeration: "1", main: false) = {
+  set text(font: "TeX Gyre Heros", stretch: 85%)
+
   if (main) {
     context {
       // Header for the main content
@@ -358,7 +363,7 @@
         }
       } else {
         // If there is no header, place the page numbering in the middle
-        place(top + center, dx: -.025em, dy: 72.028em, [#numbering(numeration, page)])
+        place(top + center, dx: -.025em, dy: 28cm, [#numbering(numeration, page)])
       }
     }
   } else {
@@ -454,13 +459,13 @@
   year: datetime.today().year(),
   body,
 ) = {
-  set text(lang: "es")
+  set text(lang: "es", size: 10pt)
   set par(justify: true)
 
   set page(
     margin: (
       top: 1in - 23pt + 12pt + 25pt,
-      inside: 1in + 13pt,
+      outside: 1in + 20pt,
       // TODO Grab rest from https://www.overleaf.com/learn/latex/Page_size_and_margins
     ),
     numbering: none, // Will get overwritten by xxx-content functions
@@ -491,13 +496,21 @@
   // pages
   counter(page).update(1)
 
+  show heading: set text(font: "TeX Gyre Heros", stretch: 85%)
+  show heading.where(level: 3): set block(above: 17pt, below: 17pt)
+  show heading.where(level: 2): set block(above: 20pt, below: 20pt)
+  show heading.where(level: 2): set text(size: 1.1em)
   show heading.where(level: 1): main_heading
+
+  set par(leading: 0.5em, spacing: 0.6em, first-line-indent: 1em)
 
   // Display figure counter as x.y where x is the chapter number it is in and y
   // is the figure number of that type in that chapter
+  set figure.caption(separator: h(1mm))
   show figure: it => {
-    show figure.caption: it => {
-      context [#it.supplement #chapter-at(here()).#it.counter.display("1.1");#it.separator #it.body]
+    show figure.caption: it => context {
+      text(font: "TeX Gyre Heros", stretch: 85%)[#strong[#it.supplement #chapter-at(here()).#it.counter.display("1.1")]]
+      [#it.separator;#it.body]
     }
     it
   }
