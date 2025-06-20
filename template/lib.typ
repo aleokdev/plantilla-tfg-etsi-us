@@ -361,9 +361,6 @@
           place(top + left, dx: -2em, dy: 3.5em, [#title_left])
           line(length: 100%, stroke: (paint: gray, thickness: 1pt), start: (-25pt, -10pt), end: (40em, -10pt))
         }
-      } else {
-        // If there is no header, place the page numbering in the middle
-        place(top + center, dx: -.025em, dy: 28cm, [#numbering(numeration, page)])
       }
     }
   } else {
@@ -411,16 +408,34 @@
           place(top + center, dx: +0em, dy: 3.5em, [#title_left])
           line(length: 100%, stroke: (paint: gray, thickness: 1pt), start: (-25pt, -10pt), end: (40em, -10pt))
         }
-      } else {
-        // If there is no header, place the page numbering in the middle
-        place(top + center, dx: -.025em, dy: 72.028em, [#numbering(numeration, page)])
       }
     }
   }
 }
 
+#let page-footer(numeration: "1") = context {
+  let page = here().page()
+
+  let page-has-title = false
+
+  let titles = query(selector(heading.where(level: 1)))
+
+  for title in titles {
+    let loc = title.location()
+
+    // Skip the first header of a section
+    if (locate(loc).page() == page) {
+      page-has-title = true
+    }
+  }
+
+  if page-has-title {
+    align(center, text(font: "TeX Gyre Heros", stretch: 85%, numbering(numeration, page)))
+  }
+}
+
 #let pre-content(body) = {
-  set page(numbering: "I", header: page-header(numeration: "I", main: false), footer: none)
+  set page(numbering: "I", header: page-header(numeration: "I", main: false), footer: page-footer(numeration: "I"))
   set heading(numbering: none)
 
   body
@@ -428,7 +443,7 @@
 
 #let main-content(body) = {
   set heading(numbering: "1.1")
-  set page(numbering: "1", header: page-header(numeration: "1", main: true), footer: none)
+  set page(numbering: "1", header: page-header(numeration: "1", main: true), footer: page-footer(numeration: "1"))
   counter(page).update(1)
   // Start counting from 1, since the pre-content section was counted in roman numerals.
 
@@ -436,7 +451,7 @@
 }
 
 #let post-content(body) = {
-  set page(numbering: "1", header: page-header(numeration: "1", main: false), footer: none)
+  set page(numbering: "1", header: page-header(numeration: "1", main: false), footer: page-footer(numeration: "1"))
   set heading(numbering: none)
 
   body
