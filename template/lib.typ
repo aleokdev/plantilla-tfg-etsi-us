@@ -414,7 +414,7 @@
 }
 
 #let page-footer(numeration: "1") = context {
-  let page = here().page()
+  let this-page = here().page()
 
   let page-has-title = false
 
@@ -424,13 +424,13 @@
     let loc = title.location()
 
     // Skip the first header of a section
-    if (locate(loc).page() == page) {
+    if (locate(loc).page() == this-page) {
       page-has-title = true
     }
   }
 
   if page-has-title {
-    align(center, text(font: "TeX Gyre Heros", stretch: 85%, numbering(numeration, page)))
+    align(center, text(font: "TeX Gyre Heros", stretch: 85%, counter(page).display(numeration)))
   }
 }
 
