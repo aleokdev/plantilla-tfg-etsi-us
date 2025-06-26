@@ -29,72 +29,46 @@
       if metadata.dev_mode {
         let today = datetime.today()
         set text(size: 6mm)
-        place(
-          top + right,
-          dx: -5mm,
-          dy: 5mm,
-          box(
-            fill: white,
-            outset: 2mm,
-            raw("VERSIÓN DEL " + str(today.day()) + "/" + str(today.month()) + "/" + str(today.year())),
-          ),
-        )
+        let version-text = context {
+          if text.lang == "en" {
+            raw(
+              str(today.day()) + "/" + str(today.month()) + "/" + str(today.year()) + " VERSION",
+            )
+          } else {
+            raw(
+              "VERSIÓN DEL " + str(today.day()) + "/" + str(today.month()) + "/" + str(today.year()),
+            )
+          }
+        }
+
+        place(top + right, dx: -5mm, dy: 5mm, box(fill: white, outset: 2mm, version-text))
       }
       place(top + left, dx: 0mm, dy: 205mm, image("figures/edificio01.png", width: 35mm, height: 5.6cm))
       place(top + left, dx: 175mm, dy: 215mm, image("figures/Logo.svg", width: 2.5cm))
-      place(top + left, dx: 141mm, dy: 265mm, [/* department logo */])
+      place(top + left, dx: 141mm, dy: 265mm, [
+        /* department logo */
+      ])
 
       set par(leading: 0.4em)
-      place(
-        top + left,
-        dx: 42mm,
-        dy: 25mm,
-        box(
-          width: 155mm,
-          text(
-            size: 21pt,
-            [
-              Trabajo Fin de Grado\
-              #metadata.degree
-            ],
-          ),
-        ),
-      )
+      place(top + left, dx: 42mm, dy: 25mm, box(width: 155mm, text(size: 21pt, [
+        Trabajo Fin de Grado\
+        #metadata.degree
+      ])))
       place(bottom + left, dx: 4.2cm, dy: -16.6cm, text(size: 21pt, box(width: 16cm, [#metadata.title])))
 
-      place(
-        top + left,
-        dx: 4.2cm,
-        dy: 165mm,
-        text(
-          size: 14pt,
-          [
-            Autor: #metadata.author
+      place(top + left, dx: 4.2cm, dy: 165mm, text(size: 14pt, [
+        Autor: #metadata.author
 
-            Tutor: #metadata.tutor
-          ],
-        ),
-      )
+        Tutor: #metadata.tutor
+      ]))
 
-      place(
-        top + center,
-        dy: 217mm,
-        box(
-          width: 13cm,
-          text(
-            size: 14pt,
-            fill: white,
-            weight: "bold",
-            [
-              #metadata.department\
-              Escuela Técnica Superior de Ingeniería\
-              Universidad de Sevilla
-              #v(0.5cm)
-              #text(size: 10pt, weight: "regular", [Sevilla, #metadata.year])
-            ],
-          ),
-        ),
-      )
+      place(top + center, dy: 217mm, box(width: 13cm, text(size: 14pt, fill: white, weight: "bold", [
+        #metadata.department\
+        Escuela Técnica Superior de Ingeniería\
+        Universidad de Sevilla
+        #v(0.5cm)
+        #text(size: 10pt, weight: "regular", [Sevilla, #metadata.year])
+      ])))
 
       place(top + center, dy: 267mm, image(width: 2.5cm, "figures/US-marca-principal.png"))
     },
@@ -106,13 +80,10 @@
 ) = {
   set align(center)
   set par(spacing: 0pt, leading: 0.5em)
-  text(
-    size: 16pt,
-    [
-      Trabajo Fin de Grado\
-      #metadata.degree
-    ],
-  )
+  text(size: 16pt, [
+    Trabajo Fin de Grado\
+    #metadata.degree
+  ])
   v(2cm)
   text(size: 21pt, weight: "bold", metadata.title)
   v(2cm)
@@ -126,14 +97,11 @@
   v(0.4cm)
   text(size: 10pt, metadata.tutor_title)
   v(3.5cm)
-  text(
-    size: 14pt,
-    [
-      #metadata.department\
-      Escuela Técnica Superior de Ingeniería\
-      Universidad de Sevilla
-    ],
-  )
+  text(size: 14pt, [
+    #metadata.department\
+    Escuela Técnica Superior de Ingeniería\
+    Universidad de Sevilla
+  ])
   v(0.5cm)
   text(size: 10pt, [Sevilla, #metadata.year])
 }
@@ -148,24 +116,19 @@
   // Reset the counter for all figure types that have appeared thus far
   context { for fig in query(figure) { fig.counter.update(0) } }
 
-  place(
-    top + left,
-    scope: "parent",
-    float: true,
-    {
-      set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
-      set block(spacing: 0pt)
-      v(75pt)
-      if x.numbering == none {
-        align(end, x.body)
-      } else {
-        align(left, x)
-      }
-      v(13pt)
-      line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
-      v(27pt)
-    },
-  )
+  place(top + left, scope: "parent", float: true, {
+    set text(font: "TeX Gyre Heros", size: 20pt, stretch: 85%)
+    set block(spacing: 0pt)
+    v(75pt)
+    if x.numbering == none {
+      align(end, x.body)
+    } else {
+      align(left, x)
+    }
+    v(13pt)
+    line(length: 100%, stroke: (paint: gray, thickness: 3.5pt))
+    v(27pt)
+  })
 }
 
 #let court_info(
@@ -176,10 +139,7 @@
   set text(font: "TeX Gyre Heros", size: 10pt, stretch: 85%)
   set block(spacing: 0pt)
 
-  grid.with(columns: (90pt, auto), gutter: 10pt)(
-    text([Trabajo Fin de Grado: ]),
-    text(metadata.title),
-  )
+  grid.with(columns: (90pt, auto), gutter: 10pt)(text([Trabajo Fin de Grado: ]), text(metadata.title))
 
   v(1cm)
   text([Autor: ])
@@ -206,16 +166,18 @@
 
   text([Acuerdan otorgarle la calificación de: ])
   v(4.5cm)
-  grid.with(columns: (7.5cm, 7cm), gutter: 10pt)(
-    v(3.5cm),
-    text([El Secretario del Tribunal:]),
-    v(1.5cm),
-    text([Fecha:]),
-  )
+  grid.with(columns: (7.5cm, 7cm), gutter: 10pt)(v(3.5cm), text([El Secretario del Tribunal:]), v(1.5cm), text([Fecha:]))
 }
 
+#let default-index-title = context {
+  if text.lang == "en" {
+    [Contents]
+  } else {
+    [Índice]
+  }
+}
 
-#let index(title: [Índice], target: heading) = context {
+#let index(title: default-index-title, target: heading) = context {
   if title != none {
     [= #title]
   }
@@ -237,10 +199,7 @@
     // Page assignation
     let page_numbering = loc.page-numbering()
     let page_number = if page_numbering != none {
-      numbering(
-        page_numbering,
-        ..counter(page).at(loc),
-      )
+      numbering(page_numbering, ..counter(page).at(loc))
     } else {
       []
     }
@@ -256,7 +215,7 @@
 
     // Show the section number, page number and entry name on the same page
     set block(breakable: false)
-    
+
     // The first 'if' is for elements that have levels, i.e. headings
     if item.at("level", default: none) != none {
       let entry = link(loc)[#grid(
@@ -290,12 +249,12 @@
       // is the figure number of that type in that chapter
       show figure.caption: it => context {
         let figure_idx = numbering("1", ..it.counter.at(loc))
-        grid(columns: 2,
-          strong[#it.supplement #chapter-at(loc).#figure_idx],
-          [#it.separator #it.body]
+        grid(
+          columns: 2,
+          strong[#it.supplement #chapter-at(loc).#figure_idx], [#it.separator #it.body],
         )
       }
-      
+
       let entry_f = link(loc)[#grid(
           columns: (4em, 1fr, 1em, 1em),
           item_numbering, item.caption, h(1em), page_number,
@@ -305,7 +264,6 @@
     }
   }
 }
-
 
 #let page-header(numeration: "1", main: false) = {
   set text(font: "TeX Gyre Heros", stretch: 85%)
@@ -321,6 +279,12 @@
 
       let page = counter(page).get().first()
 
+      let chapter-word = if text.lang == "en" {
+        [Chapter ]
+      } else {
+        [Capítulo ]
+      }
+
       for title in titles {
         let loc = title.location()
         let title_numbering = if title.numbering == none {
@@ -331,7 +295,7 @@
 
         // Chapter numbering for the left headers
         if (title.level == 1) {
-          chapter = [Capítulo ] + [#numbering("1", ..counter(heading).at(loc))] + [. ]
+          chapter = chapter-word + [#numbering("1", ..counter(heading).at(loc))] + [. ]
         } else {
           none
         }
@@ -474,9 +438,10 @@
   year: datetime.today().year(),
   // Activar el modo de desarrollo o no, por ahora sólo muestra la fecha del documento en la esquina superior derecha de la cubierta.
   dev-mode: true,
+  lang: "es",
   body,
 ) = {
-  set text(lang: "es", size: 10pt)
+  set text(lang: lang, size: 10pt)
   set par(justify: true)
 
   set page(
@@ -496,7 +461,7 @@
     tutor_title: tutor_title,
     department: department,
     year: year,
-    dev_mode: dev-mode
+    dev_mode: dev-mode,
   )
 
   cover(metadata)
