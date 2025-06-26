@@ -14,9 +14,11 @@
   // Título del tutor, p.ej. Profesor Asociado
   "Profesor Titular",
   // Nombre del departamento asociado
-  "Dpto. Teoría de la Señal y Comunicaciones"
+  "Dpto. Teoría de la Señal y Comunicaciones",
   // Año del TFG (Por defecto el año de compilación del archivo)
   // year: 2024
+  // Activar el modo de desarrollo o no, por ahora sólo muestra la fecha del documento en la esquina superior derecha de la cubierta.
+  dev-mode: true
   )
 
 
